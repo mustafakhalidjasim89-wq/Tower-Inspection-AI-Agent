@@ -135,10 +135,10 @@ def main():
         # Analyze Button handling
         analyze_button = False
         if st.session_state.raw_images and st.session_state.final_results is None:
-            analyze_button = st.button("Analyze Tower Images", type="primary", use_container_width=True )
+            analyze_button = st.button("Analyze Tower Images", type="primary", `width='stretch'` )
 
         if st.session_state.final_results is not None:
-            if st.button("🔄 Clear Analysis", use_container_width=True):
+            if st.button("🔄 Clear Analysis", `width='stretch'`):
                 st.session_state.final_results = None
                 save_state()
                 st.rerun()
@@ -227,7 +227,7 @@ def main():
                 tabs = st.tabs(list(annotated_images_dict.keys()))
                 for tab, filename in zip(tabs, annotated_images_dict.keys()):
                     with tab:
-                        st.image(annotated_images_dict[filename], caption=f"Annotated: {filename}", use_container_width=True)
+                        st.image(annotated_images_dict[filename], caption=f"Annotated: {filename}", `width='stretch'`)
             else:
                 st.warning("No annotated images were returned from the analysis.")
             
@@ -277,7 +277,7 @@ def main():
                 }
             ))
             fig.update_layout(margin=dict(l=20, r=20, t=50, b=20), height=300)
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, `width='stretch'`)
 
             st.markdown("### Detection Details")
             if all_detections:
@@ -289,7 +289,7 @@ def main():
                         "Damage (%)": d.get('damage_area_percentage', 0.0)
                     })
                 df = pd.DataFrame(display_data)
-                st.dataframe(df, use_container_width=True, hide_index=True)
+                st.dataframe(df, `width='stretch'`, hide_index=True)
             else:
                 st.info("No detections to display.")
     elif st.session_state.raw_images:
@@ -297,7 +297,7 @@ def main():
         for tab, img in zip(tabs, st.session_state.raw_images):
             with tab:
                 base_image = Image.open(io.BytesIO(img["image_bytes"])).convert("RGB")
-                st.image(base_image, caption=f"Uploaded: {img['filename']}", use_container_width=True)
+                st.image(base_image, caption=f"Uploaded: {img['filename']}", `width='stretch'`)
 
 if __name__ == "__main__":
     main()
