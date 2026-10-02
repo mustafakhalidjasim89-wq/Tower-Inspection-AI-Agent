@@ -10,6 +10,7 @@ import requests
 import streamlit as st
 
 # Centralized API configuration (Overridable via environment variable)
+# Example: export API_BASE_URL="http://host.docker.internal:8000" for Docker setups
 API_BASE_URL = os.getenv("API_BASE_URL", "http://127.0.0.1:8000")
 
 CACHE_DIR = ".cache"
@@ -222,8 +223,11 @@ def main():
                     all_detections = result.get("detections", [])
                 except requests.exceptions.ConnectionError:
                     st.error(
-                        f"🔌 Connection Refused: Could not connect to backend server at `{API_BASE_URL}`.\n\n"
-                        "Please ensure your API server (FastAPI/Flask) is running on port 8000."
+                        f"🔌 **Connection Refused:** Unable to reach backend server at `{API_BASE_URL}`.\n\n"
+                        "**To fix this:**\n"
+                        "1. Open a new terminal tab.\n"
+                        "2. Start your backend API server (e.g., `uvicorn main:app --reload --host 127.0.0.1 --port 8000`).\n"
+                        "3. Once running, click **Analyze Tower Images** again."
                     )
                     st.stop()
                 except Exception as e:
