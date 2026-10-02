@@ -135,7 +135,7 @@ def main():
         # Analyze Button handling
         analyze_button = False
         if st.session_state.raw_images and st.session_state.final_results is None:
-            analyze_button = st.button("Analyze Tower Images", type="primary", use_container_width=True`)
+            analyze_button = st.button("Analyze Tower Images", type="primary", use_container_width=True )
 
         if st.session_state.final_results is not None:
             if st.button("🔄 Clear Analysis", use_container_width=True):
