@@ -9,6 +9,9 @@ import plotly.graph_objects as go
 import requests
 import streamlit as st
 
+# Centralized API configuration (Overridable via environment variable)
+API_BASE_URL = os.getenv("API_BASE_URL", "http://127.0.0.1:8000")
+
 CACHE_DIR = ".cache"
 CACHE_PATH = os.path.join(CACHE_DIR, "analysis_state.pkl")
 
@@ -49,11 +52,13 @@ def clear_all_state():
 def generate_llm_report(detections):
     try:
         rep_res = requests.post(
-            "http://127.0.0.1:8000/report", json={"detections": detections}
+            f"{API_BASE_URL}/report", json={"detections": detections}
         )
         if rep_res.status_code == 200:
             return rep_res.json().get("report", "No report generated.")
         return "Failed to generate report from backend."
+    except requests.exceptions.ConnectionError:
+        return f"Could not connect to backend server at {API_BASE_URL}."
     except Exception as e:
         return f"API error generating report: {e}"
 
@@ -114,7 +119,7 @@ def main():
         "Confidence Threshold", 0.0, 1.0, 0.5
     )
 
-    if st.sidebar.button("🗑️️ Reset All Sessions"):
+    if st.sidebar.button("🗑️ Reset All Sessions"):
         clear_all_state()
         st.rerun()
 
@@ -196,7 +201,7 @@ def main():
 
                 try:
                     response = requests.post(
-                        "http://localhost:8000/detect/", files=files_payload
+                        f"{API_BASE_URL}/detect/", files=files_payload
                     )
                     if response.status_code != 200:
                         try:
@@ -215,6 +220,12 @@ def main():
                     result = response.json()
                     annotated_images_b64 = result.get("annotated_images", {})
                     all_detections = result.get("detections", [])
+                except requests.exceptions.ConnectionError:
+                    st.error(
+                        f"🔌 Connection Refused: Could not connect to backend server at `{API_BASE_URL}`.\n\n"
+                        "Please ensure your API server (FastAPI/Flask) is running on port 8000."
+                    )
+                    st.stop()
                 except Exception as e:
                     st.error(f"Failed to connect to backend: {str(e)}")
                     st.stop()
