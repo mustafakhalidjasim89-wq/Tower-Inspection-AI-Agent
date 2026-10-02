@@ -114,7 +114,7 @@ def main():
         "Confidence Threshold", 0.0, 1.0, 0.5
     )
 
-    if st.sidebar.button("🗑️ Reset All Sessions"):
+    if st.sidebar.button("🗑️️ Reset All Sessions"):
         clear_all_state()
         st.rerun()
 
@@ -166,11 +166,11 @@ def main():
             analyze_button = st.button(
                 "Analyze Tower Images",
                 type="primary",
-                use_container_width=True,
+                width="stretch",
             )
 
         if st.session_state.final_results is not None:
-            if st.button("🔄 Clear Analysis", use_container_width=True):
+            if st.button("🔄 Clear Analysis", width="stretch"):
                 st.session_state.final_results = None
                 save_state()
                 st.rerun()
@@ -286,7 +286,7 @@ def main():
                         st.image(
                             annotated_images_dict[filename],
                             caption=f"Annotated: {filename}",
-                            use_container_width=True,
+                            width="stretch",
                         )
             else:
                 st.warning(
@@ -360,7 +360,7 @@ def main():
             fig.update_layout(
                 margin=dict(l=20, r=20, t=50, b=20), height=300
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
             st.markdown("### Detection Details")
             if all_detections:
@@ -374,7 +374,7 @@ def main():
                         "Damage (%)": d.get("damage_area_percentage", 0.0),
                     })
                 df = pd.DataFrame(display_data)
-                st.dataframe(df, use_container_width=True, hide_index=True)
+                st.dataframe(df, width="stretch", hide_index=True)
             else:
                 st.info("No detections to display.")
     elif st.session_state.raw_images:
@@ -387,7 +387,7 @@ def main():
                 st.image(
                     base_image,
                     caption=f"Uploaded: {img['filename']}",
-                    use_container_width=True,
+                    width="stretch",
                 )
 
 
